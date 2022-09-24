@@ -18,14 +18,18 @@ from pyhrmos import Hrmos
 url = 'https://ieyasu.co/api/company_url'
 api_key = 'MGE3M2Y2NDA3MTIxZTRlMzNkMDFhOTgw'
 with Hrmos(url, api_key) as hrmos:
-	# 認証TokenはAPI KEYから自動で取得
-	# 以降はメソッド経由でにて各種APIへアクセス
+    # 認証TokenはAPI KEYから自動で取得
+    # 以降はメソッド経由でにて各種APIへアクセス
 
     # 2018年6月12日時点の日次勤怠データ一覧取得(Pagenationあり)
-    data = hrmos.get_daily_work_output(datetime.date(2018,6,12))
+    pagenated_data = hrmos.get_daily_work_outputs(datetime.date(2018,6,12))
+    for d in pagenated_data.data:
+        print(f'{d.full_name} [出勤時刻(打刻)] {d.stamping_start_at} [退勤時刻(打刻)] {d.stamping_end_at}')
 
     # 2018年6月12日時点の日次勤怠データ一覧取得(Pagenationなし)
-    data = hrmos.get_daily_work_output_all(datetime.date(2018,6,12))
+    data = hrmos.get_daily_work_outputs_all(datetime.date(2018,6,12))
+    for d in data:
+        print(f'{d.full_name} [出勤時刻(打刻)] {d.stamping_start_at} [退勤時刻(打刻)] {d.stamping_end_at}')
 
 # 取得したTokenは自動で削除される
 ```
