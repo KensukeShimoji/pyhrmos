@@ -79,7 +79,7 @@ class Hrmos:  # pylint: disable=invalid-name
         if res.status_code != HTTPStatus.OK:
             raise HrmosApiRequestException(res.text)
 
-    def get_daily_work_output(self, target_date: date, pagenation=PagenationQuery()) -> PagenatedResponse[list[WorkOutputs]]:
+    def get_daily_work_outputs(self, target_date: date, pagenation=PagenationQuery()) -> PagenatedResponse[list[WorkOutputs]]:
         """ 指定された日の日次勤怠データの一覧
 
         Args:
@@ -97,7 +97,7 @@ class Hrmos:  # pylint: disable=invalid-name
             daily_work_outputs.append(WorkOutputs.of(d))
         return PagenatedResponse.of(res.headers, daily_work_outputs)
 
-    def get_daily_work_output_all(self, target_date: date) -> list[WorkOutputs]:
+    def get_daily_work_outputs_all(self, target_date: date) -> list[WorkOutputs]:
         """ 指定された日の日次勤怠データの一覧を全て取得する
 
         Args:
@@ -107,11 +107,11 @@ class Hrmos:  # pylint: disable=invalid-name
             list[WorkOutputs]: 日次勤怠データの一覧
         """
         pagenation = PagenationQuery(limit=100, page=1)
-        dwo = self.get_daily_work_output(
+        dwo = self.get_daily_work_outputs(
             target_date=target_date, pagenation=pagenation)
         response = dwo.data
         for p_index in range(2, dwo.total_page + 1):
             pagenation.page = p_index
-            dwo = self.get_daily_work_output(target_date=target_date, pagenation=pagenation)
+            dwo = self.get_daily_work_outputs(target_date=target_date, pagenation=pagenation)
             response.extend(dwo.data) 
         return response
